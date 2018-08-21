@@ -1,0 +1,70 @@
+version: "3.2"
+services:
+  web:
+    hostname: web.magento2.docker
+    build: ./mage2-nginx
+    image: mage2-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - fpm
+    volumes:
+      - ../sportsaller/src:/var/www/magento:delegated
+    env_file:
+      - ./global.env
+
+  fpm:
+    hostname: fpm.magento2.docker
+    build: ./mage2-php-7.0-fpm
+    image: mage2-php-7.0-fpm
+    links:
+      - db
+    volumes:
+      - ../sportsaller/src:/var/www/magento:delegated
+    env_file:
+      - ./global.env
+
+  db:
+    hostname: db.magento2.docker
+    image: mariadb:10
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./db/initdb.d:/docker-entrypoint-initdb.d:ro
+    environment:
+      - MYSQL_ROOT_PASSWORD=magento2
+      - MYSQL_DATABASE=magento2
+      - MYSQL_USER=magento2
+      - MYSQL_PASSWORD=magento2
+
+  cli:
+    hostname: cli.magento2.docker
+    build: ./mage2-php-7.0-cli
+    image: mage2-php-7.0-cli
+    links:
+      - db
+    volumes:
+      - ~/.composer/cache:/root/.composer/cache
+      - ../sportsaller/src:/var/www/magento:delegated
+    env_file:
+      - ./global.env
+      - ./composer.env
+
+  cron:
+    hostname: cron.magento2.docker
+    build: ./mage2-php-7.0-cli
+    image: mage2-php-7.0-cli
+    command: run-cron
+    links:
+      - db
+    volumes:
+      - ../sportsaller/src:/var/www/magento:delegated
+    env_file:
+      - ./global.env
+    environment:
+      - ENABLE_SENDMAIL=true
+
+volumes:
+  dbdata:
