@@ -152,10 +152,10 @@ For  webserver access, we still need to write the hostname in `/etc/hosts` (this
 
 ```
 $ sudo vi /etc/hosts
-127.0.0.1 hosting2018.sport-saller.de
+127.0.0.1 sport-saller.local
 ```
 
-After that, call `https://hosting2018.sport-saller.de/` to reach the Magento 2 shop.
+After that, call `https://sport-saller.local/` to reach the Magento 2 shop.
 
 # Development
 * The `htdocs` files of the docker container can also be edited locally on your machine at  `sportsaller-dev/sportsaller`. All the edits are automatically available in the container

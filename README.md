@@ -150,10 +150,10 @@ Nun noch ein Eintrag in der `/etc/hosts` auf dem Mac mit dem Hostname für den W
 
 ```
 $ sudo vi /etc/hosts
-127.0.0.1 hosting2018.sport-saller.de
+127.0.0.1 sport-saller.local
 ```
 
-Danach sollte man mit `https://hosting2018.sport-saller.de/` auf den Shop kommen.
+Danach sollte man mit `https://sport-saller.local/` auf den Shop kommen.
 
 # Development
 * Das `htdocs` kann  auf dem Mac lokal unter `sportsaller-dev/sportsaller` editiert werden - alles was hier geändert wird, kommt automatisch in die Container
