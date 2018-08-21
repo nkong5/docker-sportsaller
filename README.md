@@ -1,19 +1,19 @@
 # Setup Docker
 > Dieser Vorgang ist einmal durchzuführen
 
-* Docker for MacOS aus dem Docker Store herunterladen - das erfordert einen Login, d.h. du musst dir einen Account erstellen.
+* Docker for MacOS aus dem Docker Store herunterladen - das erfordert einen Login, d.h. ein Account musst erstellt werden falls nicht vorhanden.
 	* Docker for MacOS Download: https://store.docker.com/editions/community/docker-ce-desktop-mac
-	* Du kannst auch versuchen, ob dieser Link hier ohne Login funktioniert: https://download.docker.com/mac/stable/Docker.dmg
-	* Dann Docker einfach installieren, wie auf der Website beschrieben. Am Ende musst du in deiner Menubar einen kleinen Walfisch mit Containern auf dem Rücken sehen.
+	* Alternativerweise ist es eventuell möglich Docker ohne Account mit diesem Link runterzuladen: https://download.docker.com/mac/stable/Docker.dmg
+	* Dann Docker einfach installieren, wie auf der Website beschrieben. Am Ende ist in der Menubar (auf dem Mac) einen kleinen Walfisch mit Containern auf dem Rücken zu sehen.
 
 # Setup Docker Sportsaller
 > Dieser Vorgang ist einmal durchzuführen
 
-* Nun öffnest du ein Terminal. Dort machst du irgendwo in deinem Homeverzeichnis ein neues, leeres Verzeichnis
-* In dieses Verzeichnis entpackst du das Zip File, das ich dir geschickt habe. Dieses enthält die Konfiguration für Docker und den initialen DB Dump, den du mir auch schon geschickt hattest
-* In das gleiche Verzeichnis legst du den sportsaller git checkout
+* Nun den Terminal öffnen. Dort ein leeres Verzeichnis für das Projekt erstellen
+* In diesem Verzeichnis die Docker-Installation mit ``` git clone https://github.com/nkong5/docker-sportsaller.git ``` clonen. Dieses enthält die Konfiguration für Docker und den initialen DB Dump des Sport-Saller-Shops.
+* In das gleiche Verzeichnis den sportsaller Magento2-Code auschecken.
 * Anschließend wird mit Docker Compose ersteinmal alles heruntergeladen und gebaut
-* Nachdem der build für die Container durch ist kannst du sie dann starten.
+* Nachdem der build für die Container durch ist kann sie dann gestartet werden.
 
 Hier die Befehle:
 
@@ -24,7 +24,7 @@ $ unzip docker-sportsaller.zip (aus meiner Mail)
 $ git clone git@github.com:milkycode/sportsaller.git
 $ tree -L 2
 .
-|-- docker-sportsaller
+|-- docker-sportsalleren-US
 |   |-- composer.env
 |   |-- db
 |   |-- docker-compose.yml
@@ -45,14 +45,14 @@ $ docker-compose build
 ```
 
 # Starten der Docker Umgebung
-> Bevor du den Container startest, musst du darauf achten, dass kein httpd, nginx, MySQL oder öhnliches auf deinem Rechner läuft!
+> Bevor der Container gestartet wird, musst  darauf geachtet werden, dass kein httpd, nginx, MySQL oder öhnliches auf dem Rechner läuft!
 
-* Die Container stellen dir folgende Ports zur Verfügung:
+* Die Container stellen folgende Ports zur Verfügung:
 	* localhost:80 -> HTTP
 	* localhost:443 -> HTTPS
 	* localhost:3306 -> MariaDB
 	* localhost:9000 -> PHP-FPM
-* Diese Ports müssen frei sein! Prüfen kannst du das so:
+* Diese Ports müssen frei sein! Prüfen kann man so:
 
 ```
 $ nc -v localhost 80
@@ -72,10 +72,10 @@ nc: connectx to localhost port 9000 (tcp) failed: Connection refused
 nc: connectx to localhost port 9000 (tcp) failed: Connection refused
 ```
 
-* Die Datei `sportsaller-dev/docker-sportsaller/composer.env` musst du anpassen. Hier musst du die Auth Token für `composer` hinterlegen, damit du später `composer install` machen kannst
-* Die Datei `sportsaller-dev/docker-sportsaller/global.env` kannst du anpassen. Hier sind Variablen für PHP und MAGE drin.
-* Nachdem du sichergestellt hast dass die Ports frei sind und die Dateien angepasst wurden, kannst du den Container starten
-* Dazu musst du im Verzeichnis `docker-sportsaller` sein
+* Die Datei `sportsaller-dev/docker-sportsaller/composer.env` musst angepasst werden. Hier musst die Auth Token für `composer` hinterlegen werden, damit später `composer install` durchgeführt werden kann. Der Token kann hier erstellt werden `https://github.com/settings/tokens`
+* Die Datei `sportsaller-dev/docker-sportsaller/global.env` kann auch angepasst werden. Hier sind Variablen für PHP und MAGE drin.
+* Nachdem sichergestellt worden ist, dass die Ports frei sind und die Dateien angepasst wurden, kann der Container gestartet werden
+* Dazu musst man sich im Verzeichnis `docker-sportsaller` befinden
 * Dort dann einfach `docker-compose up` ausführen. Das startet die ganzen benötigten Container. Das Logging kommt auf auf dem Terminal raus
 * Zum Beenden einfach CTRL-C drücken und warten bis die Container beendet sind
 
@@ -88,7 +88,7 @@ Creating volume "docker-sportsaller_dbdata" with default driver
 CTRL-C zum beenden der Container
 ```
 
-* Im Logging siehst du den Output der einzelnen Container, mit dem entsprechenden Prefix:
+* Im Logging sind die Outputs der einzelnen Container zu sehen, mit dem entsprechenden Prefix:
 	* db_1 -> MariaDB
 	* fpm_1 -> PHP FPM
 	* cli_1 / cron_1 -> Magento Cron
@@ -122,12 +122,12 @@ exit
 $
 ```
 
-* Jetzt bist du in einer Shell, die in dem PHP läuft und kannst mit ls, etc rumgucken
-* Das htdocs findest du unter `/var/www/magento` - das ist in Wirklichkeit dein Verzeichnis `sportsaller-dev/sportsaller` in dem dein GIT Checkout liegt
-* Du kannst Befehle wie `composer`, `php`, etc. verwenden
+* Jetzt ist man in einer Shell, in dem PHP läuft und Befehle wie ls, cd etc ausgeführt werden können
+* Das htdocs befindet sich unter `/var/www/magento` - das ist in Wirklichkeit das Verzeichnis `sportsaller-dev/sportsaller` in dem der GIT Checkout liegt
+* Befehle wie `composer`, `php`, etc. können auch verwendet werden
 
 # Zugriff mit dem Webbrowser
-Damit der Magento Kram bei mir funktioniert hat musste ich mich zunächst in den PHP-Container einloggen und `composer install` und anschließend einmal `magento setup:install` machen:
+Bevor die Seite auf dem Webbrowser aufgerufen werden kann, musst der Magento-Code fertig konfiguriert werden. Am besten das vendor-Verzeichnis mit allen Extensions aus dem Produktionssystem erstmal befüllen. Danach in den PHP-Container einloggen und `composer install` und anschließend einmal `magento setup:install` durchführen:
 
 ```
 root@cli:/# cd /var/www/magento/
@@ -146,31 +146,29 @@ root@cli:/# php bin/magento setup:install \
 --admin-password="pass%1234"
 ```
 
-Wie das funktioniert weisst du sicherlich besser als ich. Das mit dem `composer install` hat bei mir halt nicht wirklich funktioniert, weil ich nicht alle Module herunterladen konnte - also nicht die kommerziellen...
-
-Nun noch ein Eintrag in der `/etc/hosts` auf deinem Mac mit dem Hostname für den Webserver:
+Nun noch ein Eintrag in der `/etc/hosts` auf dem Mac mit dem Hostname für den Webserver:
 
 ```
 $ sudo vi /etc/hosts
 127.0.0.1 hosting2018.sport-saller.de
 ```
 
-Danach solltest du mit `https://hosting2018.sport-saller.de/` auf den Shop kommen.
+Danach sollte man mit `https://hosting2018.sport-saller.de/` auf den Shop kommen.
 
 # Development
-* Das `htdocs` kannst du auf deinem Mac lokal unter `sportsaller-dev/sportsaller` editieren - alles was du hier machst kommt automatisch in die Container
-* Die MariaDB im Container kannst du mit MySQL Workbench oder etwas ähnlichen mit folgenden Credentials von deinem Mac aus ansprechen:
+* Das `htdocs` kann  auf dem Mac lokal unter `sportsaller-dev/sportsaller` editiert werden - alles was hier geändert wird, kommt automatisch in die Container
+* Die MariaDB im Container kann mit MySQL Workbench oder etwas ähnlichen mit folgenden Credentials von einem Mac aus angesprochen werden:
 	* Host: localhost
 	* Port: 3306
 	* User: root
 	* Passwort: magento2
-* Die Magento DB hat von deinem Mac aus folgende Credentials
+* Die Magento DB hat von dem Mac aus folgende Credentials:
 	* Host: localhost
 	* Port: 3306
 	* Database: magento2
 	* User: magento2
 	* Passwort: magento2
-* `xdebug` hab ich noch nicht gemacht
+* `xdebug` ist auch installiert und konfiguriert und sollte wie üblich mit PHPStorm laufen.
 
 # Docker zurücksetzen
 * Anleitung unter `https://docs.docker.com/docker-for-mac/#reset` -> _Remove all data_ befolgen
