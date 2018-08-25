@@ -20,8 +20,8 @@ Hier die Befehle:
 ```
 $ mkdir sportsaller-dev
 $ cd sportsaller-dev
-$ unzip docker-sportsaller.zip (aus meiner Mail)
-$ git clone git@github.com:milkycode/sportsaller.git
+$ git clone https://github.com/nkong5/docker-sportsaller.git
+$ git clone https://github.com/milkycode/sportsaller.git
 $ tree -L 2
 .
 |-- docker-sportsalleren-US
